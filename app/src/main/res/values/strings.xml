@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="tmdb_image_base_url" translatable="false">https://image.tmdb.org/t/p/w185</string>
+    <string name="movie_poster_content_description">Movie Poster</string>
+    <string name="sort_order_mp">Sort Order</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string-array name="sort_order_array">
+        <item>@string/most_popular</item>
+        <item>@string/top_rated</item>
+    </string-array>
 </resources>
