@@ -2,6 +2,8 @@
     <string name="app_name">Popular Movies</string>
     <string name="tmdb_image_base_url" translatable="false">https://image.tmdb.org/t/p/w185</string>
     <string name="movie_poster_content_description">Movie Poster</string>
+    <string name="release_date_label">Release Date:</string>
+    <string name="user_rating_label">Average Rating:</string>
     <string name="sort_order_mp">Sort Order</string>
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>

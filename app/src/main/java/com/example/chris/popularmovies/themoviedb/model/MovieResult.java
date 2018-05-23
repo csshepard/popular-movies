@@ -1,10 +1,23 @@
 package com.example.chris.popularmovies.themoviedb.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MovieResult {
+public class MovieResult implements Parcelable{
+
+    MovieResult(Parcel in){
+        title = in.readString();
+        releaseDate = in.readString();
+        voteAverage = in.readDouble();
+        overview = in.readString();
+        posterPath = in.readString();
+        backdropPath = in.readString();
+    }
+
     @SerializedName("id")
     private Integer id;
 
@@ -50,6 +63,18 @@ public class MovieResult {
     MovieResult() {
 
     }
+
+    public static final Creator<MovieResult> CREATOR = new Creator<MovieResult>() {
+        @Override
+        public MovieResult createFromParcel(Parcel in) {
+            return new MovieResult(in);
+        }
+
+        @Override
+        public MovieResult[] newArray(int size) {
+            return new MovieResult[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -164,5 +189,19 @@ public class MovieResult {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(releaseDate);
+        dest.writeDouble(voteAverage);
+        dest.writeString(overview);
+        dest.writeString(posterPath);
+        dest.writeString(backdropPath);
+    }
 }
 

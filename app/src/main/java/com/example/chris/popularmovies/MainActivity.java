@@ -1,5 +1,6 @@
 package com.example.chris.popularmovies;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.chris.popularmovies.databinding.ActivityMainBinding;
 import com.example.chris.popularmovies.themoviedb.TheMovieDBAPI;
@@ -64,41 +64,42 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (!isLoading && gridLayoutManager.getChildCount() + gridLayoutManager.findFirstVisibleItemPosition() >= gridLayoutManager.getItemCount()) {
-                    connectAndGetNextPage();
+                    getNextPage();
                 }
 
             }
         });
 
-        connectAndGetFirstPage();
+        getFirstPage();
 
     }
 
-    private Call<MovieResultList> getMovieService(SortOrder sortOrder, String apiKey, Integer page){
-        switch (sortOrder) {
+    private Call<MovieResultList> getMovieService(){
+        switch (currentSort) {
             case MOST_POPULAR:
-                return TheMovieDBAPI.getClient().create(TheMovieDBService.class).getPopularMovies(apiKey, page);
+                return TheMovieDBAPI.getClient().create(TheMovieDBService.class).getPopularMovies(apiKey, currentPage);
             case TOP_RATED:
-                return TheMovieDBAPI.getClient().create(TheMovieDBService.class).getTopRatedMovies(apiKey, page);
+                return TheMovieDBAPI.getClient().create(TheMovieDBService.class).getTopRatedMovies(apiKey, currentPage);
             default:
                 throw new UnsupportedOperationException("Sort Order Not Supported");
         }
     }
 
-    private void connectAndGetFirstPage() {
+    private void getFirstPage() {
 
+        isLoading = true;
         currentPage = 1;
 
-        Call<MovieResultList> call = getMovieService(currentSort, apiKey, null);
+        Call<MovieResultList> call = getMovieService();
         call.enqueue(new Callback<MovieResultList>() {
             @Override
             public void onResponse(@NonNull Call<MovieResultList> call, @NonNull Response<MovieResultList> response) {
                 MovieResultList body = response.body();
                 if (body != null) {
                     maxPage = body.getTotalPages();
-                    Log.i(TAG, "onResponse: maxPages: " + Integer.toString(maxPage));
                     List<MovieResult> movieResults = body.getMovieResults();
                     mAdapter.addAll(movieResults);
+                    isLoading = false;
                 }
             }
 
@@ -109,14 +110,13 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         });
     }
 
-    private void connectAndGetNextPage() {
+    private void getNextPage() {
 
         if (currentPage != maxPage) {
             isLoading = true;
             currentPage += 1;
-            Log.i(TAG, "connectAndGetNextPage: getting page: " + Integer.toString(currentPage));
 
-            Call<MovieResultList> call = getMovieService(currentSort, apiKey, currentPage);
+            Call<MovieResultList> call = getMovieService();
             call.enqueue(new Callback<MovieResultList>() {
                 @Override
                 public void onResponse(@NonNull Call<MovieResultList> call, @NonNull Response<MovieResultList> response) {
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         if (newSort != currentSort) {
             currentSort = newSort;
             mAdapter.clear();
-            connectAndGetFirstPage();
+            getFirstPage();
         }
     }
 
@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
     @Override
     public void onItemClick(View view, int position) {
-        String url = mAdapter.getItem(position).getVoteAverage().toString();
-        Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
+        MovieResult movieResult = mAdapter.getItem(position);
+        Intent myIntent = new Intent(this, MovieDetailsActivity.class);
+        myIntent.putExtra(MovieDetailsActivity.MOVIE_RESULT_TAG, movieResult);
+        startActivity(myIntent);
     }
 }
