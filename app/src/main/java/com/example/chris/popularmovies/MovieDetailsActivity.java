@@ -14,7 +14,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = MovieDetailsActivity.class.getSimpleName();
 
-    protected static final String MOVIE_RESULT_TAG = "movieResult";
+    static final String MOVIE_RESULT_TAG = "movieResult";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +24,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(MOVIE_RESULT_TAG)) {
             Bundle data = intent.getExtras();
-            MovieResult movieResult = data.getParcelable(MOVIE_RESULT_TAG);
-            Picasso.with(context)
-                    .load(context.getString(R.string.tmdb_image_base_url) + movieResult.getPosterPath())
-                    .into(binding.moviePoster);
-            binding.setMovieData(movieResult);
+            if (data != null) {
+                MovieResult movieResult = data.getParcelable(MOVIE_RESULT_TAG);
+                if (movieResult != null) {
+                    Picasso.with(context)
+                            .load(context.getString(R.string.tmdb_image_base_url) + movieResult.getPosterPath())
+                            .into(binding.moviePoster);
+                    binding.setMovieData(movieResult);
+                }
+            }
         } else {
             throw new UnsupportedOperationException("Missing Extra: " + MOVIE_RESULT_TAG);
         }

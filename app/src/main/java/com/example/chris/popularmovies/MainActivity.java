@@ -27,6 +27,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+import static android.content.res.Configuration.ORIENTATION_UNDEFINED;
+
 public class MainActivity extends AppCompatActivity implements MovieListAdapter.ItemClickListener, AdapterView.OnItemSelectedListener{
 
     enum SortOrder {
@@ -47,12 +51,26 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        // Set your API key in a secrets.xml resource file as a string resource
+        // e.g. <resources><string name="themoviedb_key">YOUR KEY HERE</string></resources>
         apiKey = getString(R.string.themoviedb_key);
 
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        int spanCount;
+        switch (getResources().getConfiguration().orientation) {
+            case ORIENTATION_LANDSCAPE:
+                spanCount=4;
+                break;
+            case ORIENTATION_PORTRAIT:
+            case ORIENTATION_UNDEFINED:
+            default:
+                spanCount=2;
+                break;
+        }
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
         binding.movieGrid.setLayoutManager(gridLayoutManager);
+        binding.movieGrid.setHasFixedSize(true);
 
         mAdapter = new MovieListAdapter(getApplicationContext());
         mAdapter.setClickListener(this);
@@ -63,7 +81,15 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (!isLoading && gridLayoutManager.getChildCount() + gridLayoutManager.findFirstVisibleItemPosition() >= gridLayoutManager.getItemCount()) {
+                int childCount = gridLayoutManager.getChildCount();
+                int lastVisibleItemPosition = gridLayoutManager.findLastVisibleItemPosition();
+                int itemCount = gridLayoutManager.getItemCount();
+
+                Log.d(TAG, "onScrolled: childcount: " + Integer.toString(childCount)
+                        + " lastvip: " + Integer.toString(lastVisibleItemPosition)
+                        + " itemcount: " + Integer.toString(itemCount));
+                // Are we not loading and do we have less than one screen of buffered items
+                if (!isLoading && childCount + lastVisibleItemPosition > itemCount) {
                     getNextPage();
                 }
 
@@ -138,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mainmenu, menu);
+        getMenuInflater().inflate(R.menu.actionmenu, menu);
         MenuItem item = menu.findItem(R.id.sort_order_item);
         Spinner spinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

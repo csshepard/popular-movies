@@ -94,12 +94,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Post
         }
     }
 
-    // convenience method for getting data at click position
     MovieResult getItem(int position) {
         return movies.get(position);
     }
 
-    // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mItemClickListener = itemClickListener;
     }
