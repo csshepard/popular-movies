@@ -1,9 +1,12 @@
 package com.example.chris.popularmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +18,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.chris.popularmovies.database.AppDatabase;
+import com.example.chris.popularmovies.database.Converters;
+import com.example.chris.popularmovies.database.UserFavoriteEntry;
 import com.example.chris.popularmovies.databinding.ActivityMainBinding;
 import com.example.chris.popularmovies.themoviedb.TheMovieDBAPI;
 import com.example.chris.popularmovies.themoviedb.TheMovieDBService;
 import com.example.chris.popularmovies.themoviedb.model.MovieResult;
 import com.example.chris.popularmovies.themoviedb.model.MovieResultList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
     enum SortOrder {
         MOST_POPULAR,
-        TOP_RATED
+        TOP_RATED,
+        USER_FAVORITE
     }
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -46,11 +54,29 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private int currentPage = 1;
     private int maxPage;
     private SortOrder currentSort = SortOrder.MOST_POPULAR;
+    private AppDatabase db;
+    private MainActivityViewModel viewModel;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = AppDatabase.getInstance(getApplicationContext());
+        MainActivityViewModelFactory factory = new MainActivityViewModelFactory(db);
+        viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+        viewModel.getUserFavorites().observe(this, new Observer<List<UserFavoriteEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<UserFavoriteEntry> userFavoriteEntries) {
+                if (currentSort == SortOrder.USER_FAVORITE) {
+                    mAdapter.clear();
+                    getFirstPage();
+                }
+            }
+        });
+
 
         // Set your API key in a secrets.xml resource file as a string resource
         // e.g. <resources><string name="themoviedb_key">YOUR KEY HERE</string></resources>
@@ -116,29 +142,38 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         isLoading = true;
         currentPage = 1;
 
-        Call<MovieResultList> call = getMovieService();
-        call.enqueue(new Callback<MovieResultList>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieResultList> call, @NonNull Response<MovieResultList> response) {
-                MovieResultList body = response.body();
-                if (body != null) {
-                    maxPage = body.getTotalPages();
-                    List<MovieResult> movieResults = body.getMovieResults();
-                    mAdapter.addAll(movieResults);
-                    isLoading = false;
+        if (currentSort == SortOrder.USER_FAVORITE) {
+            maxPage = 1;
+            if (viewModel.getUserFavorites() != null && viewModel.getUserFavorites().getValue() != null) {
+                for (UserFavoriteEntry userFavoriteEntry : viewModel.getUserFavorites().getValue()) {
+                    mAdapter.add(Converters.convertToMovieResult(userFavoriteEntry));
                 }
             }
+        } else {
+            Call<MovieResultList> call = getMovieService();
+            call.enqueue(new Callback<MovieResultList>() {
+                @Override
+                public void onResponse(@NonNull Call<MovieResultList> call, @NonNull Response<MovieResultList> response) {
+                    MovieResultList body = response.body();
+                    if (body != null) {
+                        maxPage = body.getTotalPages();
+                        List<MovieResult> movieResults = body.getMovieResults();
+                        mAdapter.addAll(movieResults);
+                        isLoading = false;
+                    }
+                }
 
-            @Override
-            public void onFailure(@NonNull Call<MovieResultList> call, @NonNull Throwable t) {
-                Log.e(TAG, t.toString());
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<MovieResultList> call, @NonNull Throwable t) {
+                    Log.e(TAG, t.toString());
+                }
+            });
+        }
     }
 
     private void getNextPage() {
 
-        if (currentPage != maxPage) {
+        if (currentPage != maxPage && currentSort != SortOrder.USER_FAVORITE) {
             isLoading = true;
             currentPage += 1;
 
@@ -184,6 +219,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             newSort = SortOrder.MOST_POPULAR;
         } else if (item.equals(getString(R.string.top_rated))) {
             newSort = SortOrder.TOP_RATED;
+        } else if (item.equals(getString(R.string.user_favorites))) {
+            newSort = SortOrder.USER_FAVORITE;
         } else {
             throw new UnsupportedOperationException("Sort Order Not Supported");
         }

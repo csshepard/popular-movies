@@ -10,12 +10,12 @@ import java.util.List;
 public class MovieResult implements Parcelable{
 
     MovieResult(Parcel in){
+        id = in.readInt();
         title = in.readString();
         releaseDate = in.readString();
         voteAverage = in.readDouble();
         overview = in.readString();
         posterPath = in.readString();
-        backdropPath = in.readString();
     }
 
     @SerializedName("id")
@@ -60,8 +60,18 @@ public class MovieResult implements Parcelable{
     @SerializedName("vote_average")
     private Double voteAverage;
 
+
     MovieResult() {
 
+    }
+
+    public MovieResult(Integer id, String title, String releaseDate, Double voteAverage, String overview,  String posterPath) {
+        this.id = id;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+        this.title = title;
+        this.voteAverage = voteAverage;
     }
 
     public static final Creator<MovieResult> CREATOR = new Creator<MovieResult>() {
@@ -196,12 +206,12 @@ public class MovieResult implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(releaseDate);
         dest.writeDouble(voteAverage);
         dest.writeString(overview);
         dest.writeString(posterPath);
-        dest.writeString(backdropPath);
     }
 }
 

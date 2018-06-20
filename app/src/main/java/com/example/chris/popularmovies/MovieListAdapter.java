@@ -1,8 +1,10 @@
 package com.example.chris.popularmovies;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import java.util.List;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.PostersVH> {
 
+    private static final String TAG = MovieListAdapter.class.getSimpleName();
     private final List<MovieResult> movies;
     private final Context context;
     private ItemClickListener mItemClickListener;
@@ -38,8 +41,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Post
 
     @Override
     public void onBindViewHolder(@NonNull PostersVH holder, int position) {
+        Uri posterPath = Uri.parse(context.getString(R.string.tmdb_image_base_url)).buildUpon()
+                .appendEncodedPath(context.getString(R.string.tmdb_image_w185) + movies.get(position).getPosterPath())
+                .build();
+        Log.d(TAG, "onBindViewHolder: " + posterPath);
         Picasso.with(context)
-                .load(context.getString(R.string.tmdb_image_base_url) + movies.get(position).getPosterPath())
+                .load(posterPath)
+                .placeholder(R.drawable.ic_confirmation_number_black_24dp)
+                .error(R.drawable.ic_broken_image_black_24dp)
                 .into(holder.binding.moviePoster);
 
     }
@@ -55,7 +64,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Post
         }
     }
 
-    private void add(MovieResult movie){
+    public void add(MovieResult movie){
         this.movies.add(movie);
         notifyItemInserted(movies.size() - 1);
 

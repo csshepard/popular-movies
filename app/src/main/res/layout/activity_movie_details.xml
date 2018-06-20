@@ -15,8 +15,7 @@
 
         <ImageView
             android:id="@+id/movie_poster"
-            layout_constraintHorizontal_weight="40"
-            android:layout_width="0dp"
+            android:layout_width="96dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1.5"
             android:layout_marginEnd="@dimen/move_poster_margin"
@@ -26,23 +25,31 @@
             android:layout_marginTop="@dimen/move_poster_margin"
             android:contentDescription="@string/movie_poster_content_description"
             android:scaleType="centerCrop"
-            app:layout_constraintEnd_toStartOf="@id/movie_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_background"
             app:srcCompat="@android:color/transparent" />
+
+        <ImageView
+            android:id="@+id/title_background"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/movie_title"
-            layout_constraintHorizontal_weight="60"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/text_vertical_margin"
-            android:layout_marginRight="@dimen/text_vertical_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/text_vertical_margin"
             android:text="@{movieData.title}"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/movie_poster"
+            app:layout_constraintBottom_toBottomOf="@+id/title_background"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Movie Title" />
 
@@ -50,11 +57,13 @@
             android:id="@+id/release_date_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/text_vertical_margin"
             android:text="@string/release_date_label"
-            app:layout_constraintStart_toStartOf="@+id/movie_title"
-            app:layout_constraintTop_toBottomOf="@+id/movie_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintStart_toEndOf="@+id/movie_poster"
+            app:layout_constraintTop_toBottomOf="@+id/title_background" />
 
         <TextView
             android:id="@+id/release_date"
@@ -105,5 +114,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_poster"
             tools:text="This is an overview" />
+
+        <ImageView
+            android:id="@+id/favorite_unselected"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/title_background"
+            app:layout_constraintEnd_toEndOf="@+id/title_background"
+            app:layout_constraintTop_toTopOf="@+id/title_background"
+            app:srcCompat="@drawable/favorite_star_unselected" />
+        <ImageView
+            android:id="@+id/favorite_selected"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/title_background"
+            app:layout_constraintEnd_toEndOf="@+id/title_background"
+            app:layout_constraintTop_toTopOf="@+id/title_background"
+            app:srcCompat="@drawable/favorite_star_selected"
+            android:visibility="gone"/>
+
     </android.support.constraint.ConstraintLayout>
 </layout>
