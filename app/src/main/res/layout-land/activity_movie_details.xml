@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/label_content_margin"
             android:layout_marginLeft="@dimen/label_content_margin"
-            android:text="@{String.valueOf(movieData.voteAverage)}"
+            android:text="@{Double.toString(safeUnbox(movieData.voteAverage))}"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             app:layout_constraintStart_toEndOf="@+id/user_rating_label"
             app:layout_constraintTop_toTopOf="@+id/user_rating_label"
@@ -105,6 +105,22 @@
             app:layout_constraintTop_toBottomOf="@+id/user_rating_label"
             app:layout_constrainedWidth="true"
             tools:text="This is an overview" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/video_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/overview"
+            app:layout_constraintTop_toBottomOf="@+id/overview" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/review_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/overview"
+            app:layout_constraintTop_toBottomOf="@+id/video_list" />
 
         <ImageView
             android:id="@+id/favorite_unselected"

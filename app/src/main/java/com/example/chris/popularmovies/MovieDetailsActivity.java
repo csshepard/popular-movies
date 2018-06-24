@@ -21,6 +21,8 @@ import com.example.chris.popularmovies.databinding.ActivityMovieDetailsBinding;
 import com.example.chris.popularmovies.themoviedb.TheMovieDBAPI;
 import com.example.chris.popularmovies.themoviedb.TheMovieDBService;
 import com.example.chris.popularmovies.themoviedb.model.MovieResult;
+import com.example.chris.popularmovies.themoviedb.model.ReviewResult;
+import com.example.chris.popularmovies.themoviedb.model.ReviewResultList;
 import com.example.chris.popularmovies.themoviedb.model.VideoResult;
 import com.example.chris.popularmovies.themoviedb.model.VideoResultList;
 import com.squareup.picasso.Picasso;
@@ -41,7 +43,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements VideoList
 
     private ActivityMovieDetailsBinding binding;
 
-    private VideoListAdapter mAdapter = null;
+    private VideoListAdapter mVideoAdapter = null;
+    private ReviewListAdapter mReviewListAdapter = null;
 
 
     private AppDatabase db;
@@ -77,10 +80,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements VideoList
 
                     binding.videoList.setLayoutManager(new LinearLayoutManager(context));
 
-                    mAdapter = new VideoListAdapter(context);
-                    mAdapter.setClickListener(this);
-                    binding.videoList.setAdapter(mAdapter);
+                    mVideoAdapter = new VideoListAdapter(context);
+                    mVideoAdapter.setClickListener(this);
+                    binding.videoList.setAdapter(mVideoAdapter);
                     getVideos(movieResult.getId());
+
+                    binding.reviewList.setLayoutManager(new LinearLayoutManager(context));
+
+                    mReviewListAdapter = new ReviewListAdapter(context);
+                    binding.reviewList.setAdapter(mReviewListAdapter);
+                    getReviews(movieResult.getId());
 
 
                     MovieDetailsViewModelFactory factory = new MovieDetailsViewModelFactory(db, movieResult.getId());
@@ -152,7 +161,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements VideoList
                 VideoResultList body = response.body();
                 if (body != null) {
                     List<VideoResult> movieResults = body.getVideoResults();
-                    mAdapter.addAll(movieResults);
+                    mVideoAdapter.addAll(movieResults);
                 }
             }
 
@@ -163,9 +172,29 @@ public class MovieDetailsActivity extends AppCompatActivity implements VideoList
         });
     }
 
+    private void getReviews(Integer movieId) {
+
+        Call<ReviewResultList> call = TheMovieDBAPI.getClient().create(TheMovieDBService.class).getMovieReviews(movieId, apiKey, 1);
+        call.enqueue(new Callback<ReviewResultList>() {
+            @Override
+            public void onResponse(@NonNull Call<ReviewResultList> call, @NonNull Response<ReviewResultList> response) {
+                ReviewResultList body = response.body();
+                if (body != null) {
+                    List<ReviewResult> reviewResults = body.getReviewResults();
+                    mReviewListAdapter.addAll(reviewResults);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ReviewResultList> call, @NonNull Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
     @Override
     public void onItemClick(View view, int position) {
-        VideoResult videoResult = mAdapter.getItem(position);
+        VideoResult videoResult = mVideoAdapter.getItem(position);
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoResult.getKey())));
     }
 }

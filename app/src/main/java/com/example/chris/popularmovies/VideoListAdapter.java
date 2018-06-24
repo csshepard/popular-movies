@@ -15,7 +15,7 @@ import java.util.List;
 
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideosVH> {
 
-    private static final String TAG = MovieListAdapter.class.getSimpleName();
+    private static final String TAG = ReviewListAdapter.class.getSimpleName();
     private final List<VideoResult> videos;
     private final Context context;
     private ItemClickListener mItemClickListener;
@@ -54,7 +54,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
     }
 
     public void add(VideoResult video){
-        if (video.getType().equalsIgnoreCase("trailer")) {
+        if (video.getType().equalsIgnoreCase("trailer")
+                && video.getSite().equalsIgnoreCase("youtube")) {
             this.videos.add(video);
             notifyItemInserted(videos.size() - 1);
         }
