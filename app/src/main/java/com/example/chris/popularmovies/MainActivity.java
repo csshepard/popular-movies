@@ -27,7 +27,6 @@ import com.example.chris.popularmovies.themoviedb.TheMovieDBService;
 import com.example.chris.popularmovies.themoviedb.model.MovieResult;
 import com.example.chris.popularmovies.themoviedb.model.MovieResultList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private int currentPage = 1;
     private int maxPage;
     private SortOrder currentSort = SortOrder.MOST_POPULAR;
-    private AppDatabase db;
     private MainActivityViewModel viewModel;
 
 
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = AppDatabase.getInstance(getApplicationContext());
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         MainActivityViewModelFactory factory = new MainActivityViewModelFactory(db);
         viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
         viewModel.getUserFavorites().observe(this, new Observer<List<UserFavoriteEntry>>() {

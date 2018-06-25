@@ -6,11 +6,11 @@ import android.support.annotation.NonNull;
 
 import com.example.chris.popularmovies.database.AppDatabase;
 
-public class MainActivityViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+class MainActivityViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final AppDatabase mDb;
 
-    public MainActivityViewModelFactory(AppDatabase database){
+    MainActivityViewModelFactory(AppDatabase database){
         mDb = database;
     }
 

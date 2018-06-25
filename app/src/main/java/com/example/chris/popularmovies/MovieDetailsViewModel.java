@@ -10,7 +10,7 @@ public class MovieDetailsViewModel extends ViewModel {
 
     private LiveData<UserFavoriteEntry> userFavorite;
 
-    public MovieDetailsViewModel(AppDatabase database, int movieId) {
+    MovieDetailsViewModel(AppDatabase database, int movieId) {
         userFavorite = database.userFavoriteDao().loadUserFavoriteByMovieId(movieId);
     }
 

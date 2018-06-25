@@ -10,6 +10,9 @@
     <string name="top_rated">Top Rated</string>
     <string name="user_favorites">User Favorites</string>
     <string name="play_video">play video</string>
+    <string name="youtube_url">http://www.youtube.com/watch</string>
+    <string name="unset_favorite">Unset Favorite</string>
+    <string name="set_favorite">Set Favorite</string>
     <string-array name="sort_order_array">
         <item>@string/most_popular</item>
         <item>@string/top_rated</item>

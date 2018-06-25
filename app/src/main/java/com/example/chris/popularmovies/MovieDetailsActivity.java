@@ -80,15 +80,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements VideoList
 
                     binding.videoList.setLayoutManager(new LinearLayoutManager(context));
 
-                    mVideoAdapter = new VideoListAdapter(context);
+                    mVideoAdapter = new VideoListAdapter();
                     mVideoAdapter.setClickListener(this);
                     binding.videoList.setAdapter(mVideoAdapter);
+                    // Get youtube trailers for movie
                     getVideos(movieResult.getId());
 
                     binding.reviewList.setLayoutManager(new LinearLayoutManager(context));
 
-                    mReviewListAdapter = new ReviewListAdapter(context);
+                    mReviewListAdapter = new ReviewListAdapter();
                     binding.reviewList.setAdapter(mReviewListAdapter);
+                    // Get the first page of reviews
                     getReviews(movieResult.getId());
 
 
@@ -195,6 +197,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements VideoList
     @Override
     public void onItemClick(View view, int position) {
         VideoResult videoResult = mVideoAdapter.getItem(position);
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoResult.getKey())));
+        startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(getString(R.string.youtube_url)).buildUpon().appendQueryParameter("v", videoResult.getKey()).build()));
     }
 }

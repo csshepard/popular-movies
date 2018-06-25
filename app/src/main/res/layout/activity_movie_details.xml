@@ -18,13 +18,8 @@
 
         <ImageView
             android:id="@+id/movie_poster"
-            android:layout_width="104dp"
+            android:layout_width="160dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="@dimen/move_poster_margin"
-            android:layout_marginLeft="@dimen/move_poster_margin"
-            android:layout_marginRight="@dimen/move_poster_margin"
-            android:layout_marginStart="@dimen/move_poster_margin"
-            android:layout_marginTop="@dimen/move_poster_margin"
             android:contentDescription="@string/movie_poster_content_description"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1.5"
@@ -39,13 +34,14 @@
             android:background="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/movie_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/text_vertical_margin"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/text_vertical_margin"
@@ -105,16 +101,18 @@
         <ScrollView
             android:id="@+id/overview_scrollview"
             android:layout_width="0dp"
-            android:layout_height="196dp"
-            android:layout_marginEnd="@dimen/overview_horiz_margin"
-            android:layout_marginLeft="@dimen/overview_horiz_margin"
-            android:layout_marginRight="@dimen/overview_horiz_margin"
-            android:layout_marginStart="@dimen/overview_horiz_margin"
-            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:layout_height="0dp"
+            android:paddingEnd="@dimen/overview_horiz_margin"
+            android:paddingLeft="@dimen/overview_horiz_margin"
+            android:paddingRight="@dimen/overview_horiz_margin"
+            android:paddingStart="@dimen/overview_horiz_margin"
+            android:paddingTop="@dimen/text_vertical_margin"
+            android:paddingBottom="@dimen/text_vertical_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_poster"
-            >
+            app:layout_constraintBottom_toTopOf="@id/review_list"
+            android:background="@drawable/rounded_box">
             <TextView
                 android:id="@+id/overview"
                 android:layout_width="match_parent"
@@ -137,7 +135,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/title_background"
             app:layout_constraintEnd_toEndOf="@+id/title_background"
             app:layout_constraintTop_toTopOf="@+id/title_background"
-            app:srcCompat="@drawable/favorite_star_unselected" />
+            app:srcCompat="@drawable/favorite_star_unselected"
+            android:contentDescription="@string/unset_favorite" />
 
         <ImageView
             android:id="@+id/favorite_selected"
@@ -151,12 +150,15 @@
             app:layout_constraintBottom_toBottomOf="@+id/title_background"
             app:layout_constraintEnd_toEndOf="@+id/title_background"
             app:layout_constraintTop_toTopOf="@+id/title_background"
-            app:srcCompat="@drawable/favorite_star_selected" />
+            app:srcCompat="@drawable/favorite_star_selected"
+            android:contentDescription="@string/set_favorite" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/video_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             app:layout_constraintStart_toEndOf="@+id/movie_poster"
             app:layout_constraintTop_toBottomOf="@+id/user_rating_label"
             app:layout_constraintBottom_toBottomOf="@id/movie_poster"
@@ -164,11 +166,20 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/review_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/overview_scrollview"
-            app:layout_constraintTop_toBottomOf="@+id/overview_scrollview" />
+            android:paddingEnd="@dimen/overview_horiz_margin"
+            android:paddingLeft="@dimen/overview_horiz_margin"
+            android:paddingRight="@dimen/overview_horiz_margin"
+            android:paddingStart="@dimen/overview_horiz_margin"
+            android:paddingTop="@dimen/text_vertical_margin"
+            android:paddingBottom="@dimen/text_vertical_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/overview_scrollview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/rounded_box"/>
 
 
 

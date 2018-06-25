@@ -1,16 +1,12 @@
 package com.example.chris.popularmovies;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.chris.popularmovies.databinding.ReviewListItemBinding;
-import com.example.chris.popularmovies.databinding.VideoListItemBinding;
 import com.example.chris.popularmovies.themoviedb.model.ReviewResult;
-import com.example.chris.popularmovies.themoviedb.model.VideoResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +15,9 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
 
     private static final String TAG = ReviewListAdapter.class.getSimpleName();
     private final List<ReviewResult> reviews;
-    private final Context context;
 
 
-    ReviewListAdapter(Context context) {
-        this.context = context;
+    ReviewListAdapter() {
         this.reviews = new ArrayList<>();
     }
 
@@ -76,7 +70,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
         }
     }
 
-    public class ReviewsVH extends RecyclerView.ViewHolder {
+    class ReviewsVH extends RecyclerView.ViewHolder {
 
         private final ReviewListItemBinding binding;
 

@@ -14,19 +14,19 @@
             android:background="@drawable/ic_play_arrow_black_24dp"
             android:contentDescription="@string/play_video"
             android:scaleType="centerCrop"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/video_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toEndOf="@+id/play_button"
             app:layout_constraintTop_toTopOf="@id/play_button"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="Trailer 1" />
 
     </android.support.constraint.ConstraintLayout>

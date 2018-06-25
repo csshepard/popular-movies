@@ -1,6 +1,5 @@
 package com.example.chris.popularmovies;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,12 +16,10 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
 
     private static final String TAG = ReviewListAdapter.class.getSimpleName();
     private final List<VideoResult> videos;
-    private final Context context;
     private ItemClickListener mItemClickListener;
 
 
-    VideoListAdapter(Context context) {
-        this.context = context;
+    VideoListAdapter() {
         this.videos = new ArrayList<>();
     }
 

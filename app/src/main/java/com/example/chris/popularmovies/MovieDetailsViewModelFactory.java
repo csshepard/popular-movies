@@ -11,7 +11,7 @@ public class MovieDetailsViewModelFactory extends ViewModelProvider.NewInstanceF
     private final AppDatabase mDb;
     private final int mMovieId;
 
-    public MovieDetailsViewModelFactory(AppDatabase database, int movieId){
+    MovieDetailsViewModelFactory(AppDatabase database, int movieId){
         mDb = database;
         mMovieId = movieId;
     }
